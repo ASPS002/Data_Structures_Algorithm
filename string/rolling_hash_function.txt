@@ -1,0 +1,15 @@
+long long compute_hash(string const &s) //rolling hash function
+{
+	ll p = 31;
+	ll m = 1e9 + 9;
+	ll hash_val = 0;
+	ll pw = 1;
+	for (auto it : s)
+	{
+		hash_val += ((it - 'a' + 1) * pw) % m;
+		hash%=m;
+		pw *= p;
+		pw %= m;
+	}
+	return hash_val;
+}

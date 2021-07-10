@@ -1,0 +1,22 @@
+ll sp[N][25];
+ll lg[N];
+void spt(vector<ll> a)
+{
+	ll n = a.size();
+
+	lg[1] = 0;
+	for (int i = 2; i < N; i++)
+		lg[i] = lg[i / 2] + 1;
+
+	for (int i = 0; i < n; i++)
+		sp[i][0] = a[i];
+
+	for (int j = 1; j < 25; j++)
+		for (int i = 0; i + (1 << j) < n; i++)
+			sp[i][j] = min(sp[i][j - 1], sp[i + (1 << (j - 1))][j - 1]);
+}
+ll mnn(ll L, ll R)
+{
+	ll j = lg[R - L + 1];
+	ll minimum = min(sp[L][j], sp[R - (1 << j) + 1][j]);
+}

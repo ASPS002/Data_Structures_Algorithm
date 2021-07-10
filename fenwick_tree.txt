@@ -1,0 +1,32 @@
+ll fn[N];
+void update(ll i, ll add)//update
+{
+    while (i > 0 && i < N)
+    {
+        fn[i] += add;
+        i = i + (i & -i);
+    }
+}
+ll sum(ll i)//sum
+{
+    ll s = 0;
+    while (i > 0)
+    {
+        s = s + fn[i];
+        i = i - (i & -i);
+    }
+    return s;
+}
+ll lower_bound(ll val)//Binary Lifting on fenwick tree
+{
+    ll psum = 0, cur = 0;
+    for (ll i = log2(N - 2); i >= 0; i--)
+    {
+        if (fn[cur + (1ll << i)] + psum < val)
+        {
+            psum += fn[cur + (1ll << i)];
+            cur += (1ll << i);
+        }
+    }
+    return cur + 1;
+}

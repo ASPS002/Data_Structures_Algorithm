@@ -1,0 +1,29 @@
+ll cnt_unique_substring(string s)
+{
+	ll n = s.length();
+	vector<ll> hs(n + 1), pw(n);
+	ll p = 31;
+	ll m = 1e9 + 9;
+	pw[0] = 1;
+	for (int i = 1; i < n; i++)
+		pw[i] = (pw[i - 1] * p) % m;
+	for (ll i = 1; i <= n; i++)
+	{
+		hs[i] = (hs[i - 1] + ((s[i - 1] - 'a' + 1) * pw[i - 1]) % m);
+		hs[i] %= m;
+	}
+
+	int cnt = 0;
+	for (ll i = 1; i <= n; i++)
+	{
+		set<ll> se;
+		for (ll j = 0; j <= n - i; j++)
+		{
+			ll cur_hash = (hs[j + i] + m - hs[j]) % m;
+			cur_hash = (cur_hash * pw[n - j - 1]) % m;
+			se.insert(cur_hash);
+		}
+		cnt += se.size();
+	}
+	return cnt;
+}

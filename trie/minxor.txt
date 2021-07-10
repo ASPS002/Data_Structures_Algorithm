@@ -1,0 +1,81 @@
+#define ll int 
+struct Node
+{
+    int data;
+    Node *left, *right;
+    Node(int val) : data(val), left(NULL), right(NULL) {}
+};
+void maketrie(Node *head, ll val)
+{
+    for (ll i = 31; i >= 0; i--)
+    {
+
+        if (val & (1ll << i))
+        {
+            if (head->right != NULL)
+            {
+                head = head->right;
+            }
+            else
+            {
+                head->right = new Node(1);
+                head = head->right;
+            }
+        }
+        else
+        {
+            if (head->left != NULL)
+            {
+                head = head->left;
+            }
+            else
+            {
+                head->left = new Node(1);
+                head = head->left;
+            }
+        }
+    }
+}
+ll triemin(Node *head, ll val, ll position)
+{
+    if (position < 0)
+        return 0;
+    ll ans = 0;
+    if (val & (1ll << position))
+    {
+        if (head->right != NULL)
+        {
+            ans += triemin(head->right, val, position - 1);
+        }
+        else if(head->left!=NULL)
+        {
+            ans += (1ll << position)+triemin(head->left, val, position - 1);
+        }
+    }
+    else
+    {
+        if (head->left != NULL)
+        {
+            ans += triemin(head->left, val, position - 1);
+        }
+        else if(head->right!=NULL)
+        {
+            ans += (1ll << position) + triemin(head->right, val, position - 1);
+        }
+    }
+    return ans;
+}
+int Solution::findMinXor(vector<int> &A) {
+    
+
+    Node *head = new Node(0);
+    int n=A.size();
+    ll ans = 1e18;
+    maketrie(head, A[0]);
+    for (ll i = 1; i < n; i++)
+    {
+        ans = min(ans, triemin(head, A[i], 31));
+        maketrie(head, A[i]);
+    }
+    return ans;
+}

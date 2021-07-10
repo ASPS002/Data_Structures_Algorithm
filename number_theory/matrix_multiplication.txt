@@ -1,0 +1,134 @@
+#include <bits/stdc++.h>
+#include <iostream>
+using namespace std;
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+#define speed                     \
+	ios_base::sync_with_stdio(0); \
+	cin.tie(0);                   \
+	cout.tie(0);
+#define ll long long
+#define pb push_back
+#define mem1(a) memset(a, -1, sizeof(a))
+#define mem0(a) memset(a, 0, sizeof(a))
+#define setp(x) fixed << setprecision(x)
+#define endl "\n"
+#define mod 1000000007
+#define mod1 998244353
+#define ff first
+#define ss second
+#define MAX 100005
+#define N 500005
+#define INF 10000000000000000
+#define all(v) v.begin(), v.end()
+#define sbit(a) __builtin_popcount(a)
+template <typename T>
+using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+typedef pair<ll, ll> pll;
+typedef pair<pll, ll> ppl;
+typedef map<ll, ll> mpll;
+typedef map<vector<ll>, ll> mpvl;
+ll power(ll x, ll y, ll p)
+{
+	ll res = 1;
+
+	x = x % p;
+
+	if (x == 0)
+		return 0;
+	while (y > 0)
+	{
+
+		if (y & 1)
+			res = (res * x) % p;
+
+		y = y >> 1;
+		x = (x * x) % p;
+	}
+
+	return res;
+}
+void multiply(vector<vector<int>> &A, vector<vector<int>> &B)
+{
+	int rw = A.size();
+	int cl = A[0].size();
+	int rw2 = B.size();
+	int cl2 = B[0].size();
+	vector<vector<int>> res(rw, vector<int>(cl2, 0));
+	for (int i = 0; i < rw; i++)
+	{
+		for (int j = 0; j < cl2; j++)
+		{
+			for (int k = 0; k < cl; k++)
+			{
+				res[i][j] += A[i][k] * B[k][j];
+			}
+		}
+	}
+	for (int i = 0; i < rw; i++)
+	{
+		for (int j = 0; j < cl; j++)
+		{
+			A[i][j] = res[i][j];
+		}
+	}
+}
+void calculate(vector<vector<int>> &A, int n)
+{
+	int sz = A.size();
+	vector<vector<int>> I(sz, vector<int>(sz, 0));
+	for (int i = 0; i < sz; i++)
+	{
+		for (int j = 0; j < sz; j++)
+		{
+			if (i == j)
+				I[i][j] = 1;
+			else
+				I[i][j] = 0;
+		}
+	}
+	while (n)
+	{
+		if (n % 2)
+		{
+			multiply(I, A);
+			n--;
+		}
+		multiply(A, A);
+		n /= 2;
+	}
+	for (int i = 0; i < sz; i++)
+	{
+		for (int j = 0; j < sz; j++)
+		{
+			A[i][j] = I[i][j];
+		}
+	}
+}
+void solve()
+{
+	vector<vector<int>> A(2, vector<int>(2, 0));
+	A[0][0] = 1, A[1][0] = 1, A[0][1] = 1;
+	calculate(A, 5);
+	for (int i = 0; i < 2; i++)
+	{
+		for (int j = 0; j < 2; j++)
+		{
+			cout << A[i][j] << " ";
+		}
+		cout<<endl;
+	}
+	return;
+}
+int main()
+{
+	speed;
+	ll kk;
+	kk = 1;
+	// cin >> kk;
+	while (kk--)
+	{
+		solve();
+	}
+}

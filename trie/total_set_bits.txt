@@ -1,0 +1,25 @@
+#define mod 1000000007
+int Solution::solve(int A) {
+    
+    A++;
+    int ans=0;
+    for(int i=0;i<32;i++)
+    {
+        int div=(A)/(1<<i);//this is bit pattern 0th bit repeat after 2^0 times 1th bit repeat after 2^1 times and so on............
+        int md=A%(1<<i);
+        if(div%2==0)
+        {
+            ans+=((div)/2)*(1<<i);
+            ans%=mod;
+        }
+        else
+        {
+            ans+=((div)/2)*(1<<i);
+            ans%=mod;
+            ans+=md;
+            ans%=mod;
+        }
+    }
+    return ans;
+    
+}

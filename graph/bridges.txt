@@ -1,0 +1,123 @@
+#include <bits/stdc++.h>
+#include <iostream>
+using namespace std;
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+#define speed                     \
+	ios_base::sync_with_stdio(0); \
+	cin.tie(0);                   \
+	cout.tie(0);
+#define ll long long
+#define pb push_back
+#define mem1(a) memset(a, -1, sizeof(a))
+#define mem0(a) memset(a, 0, sizeof(a))
+#define setp(x) fixed << setprecision(x)
+#define endl "\n"
+#define mod 1000000007
+#define mod1 998244353
+#define ff first
+#define ss second
+#define MAX 100005
+#define N 500005
+#define INF 1000000009
+#define all(v) v.begin(), v.end()
+#define sbit(a) __builtin_popcount(a)
+template <typename T>
+using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+typedef pair<ll, ll> pll;
+typedef pair<pll, ll> ppl;
+typedef map<ll, ll> mpll;
+typedef map<vector<ll>, ll> mpvl;
+ll power(ll x, ll y, ll p)
+{
+	ll res = 1;
+
+	x = x % p;
+
+	if (x == 0)
+		return 0;
+	while (y > 0)
+	{
+
+		if (y & 1)
+			res = (res * x) % p;
+
+		y = y >> 1;
+		x = (x * x) % p;
+	}
+
+	return res;
+}
+ll tc = 1;
+void dfs(ll v, ll p, vector<vector<ll>> &adj, vector<pll> &ans, vector<ll> &in, vector<ll> &to, int time, vector<ll> &vis)
+{
+	in[v] = to[v] = time++;
+	vis[v] = 1;
+	for (auto it : adj[v])
+	{
+		if (it != p)
+		{
+			if (vis[it] == 1)
+			{
+				to[v] = min(to[v], in[it]);
+			}
+			else
+			{
+				dfs(it, v, adj, ans, in, to, time, vis);
+				to[v] = min(to[v], to[it]);
+				if (to[it] > in[v])
+				{
+					if (v < it)
+						ans.pb({v, it});
+					else
+						ans.pb({it, v});
+				}
+			}
+		}
+	}
+}
+void solve()
+{
+	ll n, m;
+	cin >> n >> m;
+	vector<vector<ll>> adj(n + 1);
+	for (int i = 0; i < m; i++)
+	{
+		ll x, y;
+		cin >> x >> y;
+		adj[x].push_back(y);
+		adj[y].push_back(x);
+	}
+	vector<pll> ans;
+	vector<ll> in(n + 1), to(n + 1), vis(n + 1);
+	ll time = 1;
+	dfs(1, -1, adj, ans, in, to, time, vis);
+	if (ans.size())
+	{
+		sort(all(ans));
+		for (auto it : ans)
+		{
+			cout << it.ff << " " << it.ss << endl;
+		}
+		return;
+	}
+	else
+	{
+		cout << "Sin bloqueos" << endl;
+		return;
+	}
+}
+int main()
+{
+	speed;
+	ll kk;
+	kk = 1;
+	cin >> kk;
+	while (kk--)
+	{
+		cout << "Caso #" << tc << endl;
+		solve();
+		tc++;
+	}
+}

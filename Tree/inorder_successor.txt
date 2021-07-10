@@ -1,0 +1,39 @@
+struct TreeNode
+{
+
+	int val;
+	int *left, *right;
+	TreeNode(int x) : val(x), left(NULL), right(NULL){};
+};
+TreeNode *inorder_successor(TreeNode *root, TreeNode *snode)
+{
+	if (snode->right)
+	{
+		snode = snode->right;
+		while (snode->left != NULL)
+			snode = snode->left;
+		return snode;
+	}
+	else
+	{
+		TreeNode *tmp;
+		tmp = NULL;
+		while (true)
+		{
+			if (snode->val < root->val)
+			{
+				tmp = root;
+				root = root->left;
+			}
+			else if (snode->val > root->val)
+			{
+				root = root->right;
+			}
+			else
+			{
+				break;
+			}
+		}
+		return tmp;
+	}
+}

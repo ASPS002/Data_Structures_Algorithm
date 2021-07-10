@@ -1,0 +1,115 @@
+#define ll long long
+struct Node
+{
+    ll cnt;
+    Node *ptr[26];
+    Node()
+    {
+        cnt = 0;
+        for (ll i = 0; i < 26; i++)
+        {
+            ptr[i] = NULL;
+        }
+    }
+};
+bool comp(pair<int,int>a,pair<int,int>b){
+ if(a.first == b.first) return a.second < b.second;
+ return a.first > b.first; 
+ }
+void insert(string &s, Node *root)
+{
+    for (ll i = 0; i < s.length(); i++)
+    {
+        ll val = s[i] - 'a';
+        if (root->ptr[val] == NULL)
+        {
+            root->ptr[val] = new Node;
+            root = root->ptr[val];
+            root->cnt += 1;
+        }
+        else
+        {
+            root = root->ptr[val];
+            root->cnt += 1;
+        }
+    }
+}
+ll check(string &s, Node *root)
+{
+    for (ll i = 0; i < s.length(); i++)
+    {
+        ll val = s[i] - 'a';
+        if (root->ptr[val] != NULL)
+        {
+        }
+        else
+            return 0;
+        root = root->ptr[val];
+    }
+    int ans=0;
+    for(ll i=0;i<26;i++)
+    {
+        if(root->ptr[i]!=NULL)ans+=root->ptr[i]->cnt;
+    }
+    if(ans==root->cnt)return 0;
+    return 1;
+}
+vector<int> Solution::solve(string A, vector<string> &B) {
+    
+    string s = "";
+    Node *root = new Node;
+    for (ll i = 0; i < A.length(); i++)
+    {
+        if (A[i] == '_')
+        {
+            insert(s, root);
+            s = "";
+        }
+        else
+        {
+            s += A[i];
+            if (i == int(A.length()) - 1)
+            {
+                insert(s, root);
+            }
+        }
+    }
+    vector<pair<ll, ll>> vp;
+    ll idx = 0;
+    for (auto it : B)
+    {
+        s = "";
+        string tmp = it;
+        ll ans = 0;
+        for (ll i = 0; i < tmp.length(); i++)
+        {
+            if (tmp[i] == '_')
+            {
+            
+                ans += check(s, root);
+                s = "";
+            }
+            else
+            {
+
+                s += tmp[i];
+                if (i == int(tmp.length()) - 1)
+                {
+
+                    ans += check(s, root);
+                }
+            }
+        }
+        // cout << ans << " " << idx << " " << tmp << endl;
+        vp.push_back({ans, idx});
+        idx++;
+    }
+    sort(vp.begin(), vp.end(),comp);
+    // reverse(vp.begin(), vp.end());
+    vector<int> ans;
+    for (ll i = 0; i < vp.size(); i++)
+    {
+        ans.push_back( vp[i].second);
+    }
+    return ans;
+}
