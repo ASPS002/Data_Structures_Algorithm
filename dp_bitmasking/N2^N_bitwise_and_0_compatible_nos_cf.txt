@@ -1,0 +1,118 @@
+//httpscodeforces.comblogentry45223//link to blog
+#include <bits/stdc++.h>
+#include <iostream>
+using namespace std;
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+#define speed                     \
+	ios_base::sync_with_stdio(0); \
+	cin.tie(0);                   \
+	cout.tie(0);
+#define ll long long
+#define pb push_back
+#define mem1(a) memset(a, -1, sizeof(a))
+#define mem0(a) memset(a, 0, sizeof(a))
+#define setp(x) fixed << setprecision(x)
+#define endl "\n"
+#define mod 1000000007
+#define mod1 998244353
+#define ff first
+#define ss second
+#define MAX 100005
+#define N 4000005
+#define INF 10000000
+#define all(v) v.begin(), v.end()
+#define sbit(a) __builtin_popcount(a)
+template <typename T>
+using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+typedef pair<ll, ll> pll;
+typedef pair<pll, ll> ppl;
+typedef map<ll, ll> mpll;
+typedef map<vector<ll>, ll> mpvl;
+ll power(ll x, ll y, ll p)
+{
+	ll res = 1;
+
+	x = x % p;
+
+	if (x == 0)
+		return 0;
+	while (y > 0)
+	{
+
+		if (y & 1)
+			res = (res * x) % p;
+
+		y = y >> 1;
+		x = (x * x) % p;
+	}
+
+	return res;
+}
+ll dp[2 * N];
+ll pre(ll n, vector<ll> a)
+{
+	for (ll i = 0; i < 2 * N; i++)
+		dp[i] = -1;
+	ll val = ceil(log2(N));
+	for (ll i = 0; i < n; i++)
+	{
+		dp[a[i]] = i;
+	}
+	for (ll i = 0; i < val; i++)
+	{
+		for (ll j = 0; j < 2 * N; j++)
+		{
+			if (j & (1ll << i))
+			{
+				if (dp[j ^ (1ll << i)] != -1)
+				{
+					dp[j] = max(dp[j], dp[j ^ (1ll << i)]);
+				}
+			}
+		}
+	}
+}
+void solve()
+{
+	ll n;
+	cin >> n;
+
+	vector<ll> a(n);
+	for (ll i = 0; i < n; i++)
+	{
+		cin >> a[i];
+	}
+	ll val = ceil(log2(N));
+	pre(n, a);
+	vector<ll> ans;
+	for (ll i = 0; i < n; i++)
+	{
+		// cout << dp[a[i] ^ ((1ll << (val))-1)] << endl;
+		if (dp[a[i] ^ ((1ll << (val))-1)] == -1)
+		{
+			ans.pb(-1);
+		}
+		else
+		{
+			ans.pb(a[dp[a[i] ^ ((1ll << (val)) - 1)]]);
+		}
+	}
+	for (auto it : ans)
+	{
+		cout << it << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	speed;
+	ll kk;
+	kk = 1;
+	// cin >> kk;
+	while (kk--)
+	{
+		solve();
+	}
+}
