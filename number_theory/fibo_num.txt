@@ -59,8 +59,8 @@ void calculate(vector<vector<long long int>> &A, int n)
 }
 int Solution::solve(int n) {
      
-      if(n==1)return 1;
-      vector<vector<long long int>> A(2, vector<long long int>(2, 0));
+         if(n==1)return 1;
+         vector<vector<long long int>> A(2, vector<long long int>(2, 0));
 	A[0][0] = 1, A[1][0] = 1, A[0][1] = 1;
 	calculate(A, n-1);
 	return A[0][0];
