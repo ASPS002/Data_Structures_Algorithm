@@ -1,0 +1,38 @@
+#Leetcode
+#define N 100005
+#define ff first
+#define ss second
+class Solution {
+public:
+    vector<pair<int,int>>adj[N];
+    #define ll long long
+    int findCheapestPrice(int n, vector<vector<int>>& e, int src, int dst, int k) {
+        
+        vector<ll> d(n);
+       
+        for(ll i=0;i<n;i++)
+        {
+            d[i]=1e16;
+          
+        }
+        d[src]=0;
+        for(int i=1;i<=k+1;i++)
+        { 
+            vector<ll>d2=d;
+            for(int j=0;j<e.size();j++)
+            { 
+                if(d2[e[j][0]]<=1e10)
+                {
+                if(d2[e[j][1]]>d[e[j][0]]+e[j][2])
+                {
+                    d2[e[j][1]]=d[e[j][0]]+e[j][2];
+                }
+                }
+            }
+            d=d2;
+            
+        }
+        if(d[dst]>=1e15)return -1;
+        return d[dst];
+    }
+};

@@ -1,0 +1,77 @@
+//leetcode
+#include <bits/stdc++.h>
+#include <iostream>
+using namespace std;
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+#define speed                     \
+	ios_base::sync_with_stdio(0); \
+	cin.tie(0);                   \
+	cout.tie(0);
+#define ll long long
+#define pb push_back
+#define mem1(a) memset(a, -1, sizeof(a))
+#define mem0(a) memset(a, 0, sizeof(a))
+#define setp(x) fixed << setprecision(x)
+#define endl "\n"
+#define mod 1000000007
+#define mod1 998244353
+#define ff first
+#define ss second
+#define MAX 100005
+#define N 1005
+#define INF 10000000
+#define all(v) v.begin(), v.end()
+#define sbit(a) __builtin_popcount(a)
+template <typename T>
+using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+typedef pair<ll, ll> pll;
+typedef pair<pll, ll> ppl;
+typedef map<ll, ll> mpll;
+typedef map<vector<ll>, ll> mpvl;
+class Solution {
+public:
+    string minInteger(string s, int k) {
+        
+	
+	
+	ll n = s.length();
+	set<ll> se[10];
+	for (ll i = 0; i < s.length(); i++)
+	{
+		se[s[i] - '0'].insert(i);
+	}
+	ordered_set<ll> ose;
+	vector<ll> v(n);
+	ll ridx = 0;
+	for (ll i = 0; i < n; i++)
+	{
+		for (ll j = 0; j < 10; j++)
+		{
+			if (se[j].size())
+			{
+				ll bg = *se[j].begin();
+				ll sz = ose.size();
+				ll ls = ose.order_of_key(bg);
+				ll bade = sz - ls;
+				if (k >= (bg + bade - ridx))
+				{
+					k -= (bg + bade - ridx);
+					v[ridx++] = j;
+					ose.insert(bg);
+					se[j].erase(se[j].begin());
+					break;
+				}
+			}
+		}
+	}
+	string ans = "";
+	for (auto it : v)
+	{
+		ans += (it + '0');
+	}
+	return ans;
+    }
+    
+};
