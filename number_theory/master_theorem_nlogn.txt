@@ -1,0 +1,49 @@
+//https://mzhang2021.github.io/cp-blog/divide-and-conquer/
+//reference//binarysearch.com
+bool fnd(vector<int>&a,int l,int r,vector<int>&ll,vector<int>&rr)
+{ 
+    if(l>=r)return true;
+    int i=l,j=r;
+    while(i<=j)
+    {
+        if(ll[i]<l&&rr[i]>r)
+        {
+            return fnd(a,l,i-1,ll,rr)&fnd(a,i+1,r,ll,rr);
+        }
+        if(ll[j]<l&&rr[j]>r)
+        {
+            return fnd(a,l,j-1,ll,rr)&fnd(a,j+1,r,ll,rr);
+        }
+        i++;
+        j--;
+    }
+    return false;
+}
+bool solve(vector<int>& a) {
+    
+    int n=a.size();
+    vector<int>l(n+1),r(n+1);
+    unordered_map<int,int>mp;
+    for(int i=n-1;i>=0;i--)
+    { 
+        if(mp[a[i]])
+        r[i]=mp[a[i]];
+        else r[i]=n;
+
+        mp[a[i]]=i;
+    }
+    for(int i=0;i<n;i++)mp[a[i]]=-1;
+    for(int i=0;i<n;i++)
+    {
+        l[i]=mp[a[i]];
+        mp[a[i]]=i;
+    }
+  
+    return fnd(a,0,n-1,l,r);
+
+
+
+
+
+
+}
