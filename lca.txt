@@ -87,9 +87,9 @@ ll ancestor(ll v, ll u)
 
 	for (ll i = l; i >= 0; i--)
 	{
-		if (!is_ancestor(up[u][l], v))
+		if (!is_ancestor(up[u][i], v))
 		{
-			u = up[u][l];
+			u = up[u][i];
 		}
 	}
 	return up[u][0];
@@ -98,7 +98,7 @@ void solve()
 {
 	ll n;
 	cin >> n;
-	ll l = ceil(log2(n));
+	l = ceil(log2(n));
 	up.assign(n, vector<ll>(l + 1));
 	timer = 1;
 	dfs(1, 1, up);
