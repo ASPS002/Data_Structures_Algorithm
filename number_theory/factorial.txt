@@ -16,7 +16,7 @@ void pre()
    {
        fact[i]=fact[i-1]*i;
        fact[i]%=mod;
-       ifact[i]=power(fact[i],mod-2,mod);
+       ifact[i]=power(fact[i],mod-2,mod);// just mm things
        ifact[i]%=mod;
    }
 }
