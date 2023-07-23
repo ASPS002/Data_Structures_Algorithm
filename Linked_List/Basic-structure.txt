@@ -1,0 +1,25 @@
+#include <iostream>
+
+template <typename T>
+class LinkedListNode {
+public:
+    T data;
+    LinkedListNode<T>* next;
+
+    LinkedListNode(T data) {
+        this->data = data;
+        this->next = nullptr;
+    }
+};
+
+int main() {
+    LinkedListNode<int>* node = new LinkedListNode<int>(10);
+    // Create an object with data type 'int'
+
+    LinkedListNode<std::string>* node2 = new LinkedListNode<std::string>("Hello");
+    // Create an object with data type 'std::string'
+
+    // Rest of your code
+
+    return 0;
+}
