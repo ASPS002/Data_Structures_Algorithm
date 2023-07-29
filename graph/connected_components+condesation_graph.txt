@@ -1,0 +1,111 @@
+ vector<int>adj[30005];
+    vector<int>adj_scc[30005];
+    vector<int>tadj[30005];
+    // vector<int>vis(30005);
+    int vis[30005];
+    int root[30005];
+    vector<int>root_nodes;
+    vector<int>order;
+    vector<int>components[30005];
+    int cnt;
+    void dfs(int v)
+    {   
+        vis[v]=1;
+        for(auto it:adj[v])
+        {
+            if(!vis[it])
+            {
+                dfs(it);
+            }
+        }
+        order.push_back(v);
+    }
+    void dfs1(int v)
+    {   
+        vis[v]=1;
+        for(auto it:tadj[v])
+        {
+            if(!vis[it])
+            {
+                dfs1(it);
+            }
+        }
+        components[cnt].push_back(v);
+    }
+    void dfs2(int v)
+    {   
+        vis[v]=1;
+        for(auto it:adj_scc[v])
+        {
+            if(!vis[it])
+            {
+                dfs2(it);
+            }
+        }
+    }
+    int captainAmerica(int n, int m, vector<vector<int>> &v){
+        
+       for(int i=0;i<=n;i++)
+       {
+           adj[i].clear();
+           tadj[i].clear();
+           vis[i]=0;
+           root[i]=0;
+           components[i].clear();
+           adj_scc[i].clear();
+       }
+       cnt=0;
+       order.clear();
+       for(int i=0;i<m;i++)
+       {
+           adj[v[i][0]].push_back(v[i][1]);
+           tadj[v[i][1]].push_back(v[i][0]);
+          
+       }
+       for(int i=1;i<=n;i++)
+       {
+           if(!vis[i])
+           {
+               dfs(i);
+           }
+       }
+       reverse(order.begin(),order.end());
+       for(int i=1;i<=n;i++)
+       {
+           vis[i]=0;
+       }
+       for(int i=0;i<n;i++)
+       {
+           if(!vis[order[i]])
+           {
+               dfs1(order[i]);
+               root_nodes.push_back(components[cnt][0]);
+               for(auto it:components[cnt])
+               {
+                   root[it]=components[cnt][0];
+               }
+               cnt++;
+           }
+       }
+     
+       for(int i=1;i<=n;i++)
+       {
+           for(auto it:adj[i])
+           {
+               int r1=root[i];
+               int r2=root[it];
+               if(r1!=r2){
+                   adj_scc[r2].push_back(r1);
+                   
+               }
+           }
+       }
+       int sz=root_nodes.size();
+       for(int i=0;i<=n;i++)vis[i]=0;
+       dfs2(root_nodes[sz-1]);//only one connected component can be visited by all the other connected components and that will be the last one 
+       for(auto it:root_nodes)
+       {
+           if(vis[it]==0)return 0;
+       }
+       return components[cnt-1].size();
+       
