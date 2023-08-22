@@ -1,0 +1,16 @@
+//link-https://cp-algorithms.com/algebra/all-submasks.html#enumerating-all-submasks-of-a-given-mask
+//m is the mask whose all sub masks need to be considered
+for (int s=m;s!=0 ; s=(s-1)&m) {
+
+  // use s
+}
+--------------------------------------------------------------------------
+In many problems, especially those that use bitmask dynamic programming, you want to iterate through all bitmasks and for each mask, iterate through all of its submasks:
+
+for (int m=0; m<(1<<n); ++m)
+    for (int s=m; s; s=(s-1)&m)
+ ... s and m ...
+
+Time complexity O(3^n)-see proof in the above given link
+
+A good problem on this -https://www.codingninjas.com/studio/problems/ninja-and-hi-courses_1281305?topList=striver-sde-sheet-problems&utm_source=striver&utm_medium=website&leftPanelTab=0

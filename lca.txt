@@ -98,8 +98,8 @@ void solve()
 {
 	ll n;
 	cin >> n;
-	l = ceil(log2(n));
-	up.assign(n, vector<ll>(l + 1));
+	l = ceil(log2(n+1));
+	up.assign(n+1, vector<ll>(l + 1));
 	timer = 1;
 	dfs(1, 1, up);
 }
