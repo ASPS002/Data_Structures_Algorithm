@@ -1,0 +1,36 @@
+// related posts
+// https://www.geeksforgeeks.org/print-all-the-cycles-in-an-undirected-graph/
+
+vector<vector<ll>>allCycle;
+void dfs(int v, int p, vector<vector<int>> &graph, vector<int> &par, vector<int> &color, vector<int> &cycle)
+{
+   if (color[v] == 2)
+      return;
+
+   if (color[v] == 1)
+   { 
+      vector<ll>tmp;
+      int c_p = p;
+      while (c_p != v)
+      {
+         cycle.push_back(c_p);
+         tmp.push_back(c_p);
+         c_p = par[c_p];
+      }
+      cycle.push_back(v);
+      tmp.push_back(v);
+      allCycle.push_back(tmp);
+      return;
+   }
+   color[v] = 1;
+   par[v] = p;
+   for (auto it : graph[v])
+   {
+      if (it != par[v])
+      {
+         dfs(it, v, graph, par, color, cycle);
+      }
+   }
+   color[v] = 2;
+   return;
+}

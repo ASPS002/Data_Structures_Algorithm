@@ -1,0 +1,149 @@
+https://leetcode.com/discuss/interview-question/1528662/determine-the-number-of-pairsijsuch-that-aiaj-and-ij-is-divisible-by-x
+
+reference for logic-https://stackoverflow.com/questions/69674853/finding-number-of-pairs-product-of-whose-indices-is-divisible-by-another-number
+
+#include <bits/stdc++.h>
+#include <iostream>
+using namespace std;
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+#define speed                    \
+   ios_base::sync_with_stdio(0); \
+   cin.tie(0);                   \
+   cout.tie(0);
+#define ll long long
+#define ld long double
+#define pb push_back
+#define mem1(a) memset(a, -1, sizeof(a))
+#define mem0(a) memset(a, 0, sizeof(a))
+#define setp(x) fixed << setprecision(x)
+#define endl "\n"
+#define mod 11
+#define mod1 998244353
+#define ff first
+#define ss second
+#define MAX 10000005
+#define N 3000005
+#define K 35
+#define INF 10000000
+#define all(v) v.begin(), v.end()
+#define sbit(a) __builtin_popcount(a)
+template <typename T>
+using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+typedef pair<ll, ll> pll;
+typedef pair<pll, ll> ppl;
+typedef map<ll, ll> mpll;
+typedef map<vector<ll>, ll> mpvl;
+ll power(ll x, ll y, ll p)
+{
+   ll res = 1;
+
+   x = x % p;
+
+   if (x == 0)
+      return 0;
+   while (y > 0)
+   {
+
+      if (y & 1)
+         res = (res * x) % p;
+
+      y = y >> 1;
+      x = (x * x) % p;
+   }
+
+   return res;
+}
+ll powernm(ll x, ll y)
+{
+   ll res = 1;
+
+   if (x == 0)
+      return 0;
+   while (y > 0)
+   {
+
+      if (y & 1)
+         res = (res * x);
+
+      y = y >> 1;
+      x = (x * x);
+   }
+
+   return res;
+}
+ll getlcm(ll x, ll y)
+{
+   return (x * y) / __gcd(x, y);
+}
+void solve()
+{
+   ll n, x;
+   cin >> n >> x;
+   vector<ll> a(n);
+   ll mx = 0;
+   for (ll i = 0; i < n; i++)
+   {
+      cin >> a[i];
+      mx = max(mx, a[i]);
+   }
+   // i *j = k * X
+   //  i=k*x/j now is an integer
+   //  i=k'*lcm(x,j)/j
+   //  that is i should be a multiple of lcm(x,j)/j // this is req_val we are using
+   vector<ll> v[mx+5];
+   for (ll i = 0; i < n; i++)
+   {
+      v[a[i]].push_back(i + 1);
+   }
+   ll ans = 0;
+   for (ll i = 0; i <= mx; i++)
+   {
+      map<ll, ll> mp;
+      for (auto it : v[i])
+      {
+         ll val = it;
+         for (ll j = 1; j * j <= val; j++)
+         {
+            if (val % j == 0)
+            {
+               if (j == val / j)
+               {
+                  mp[j]++;
+               }
+               else
+               {
+                  mp[j]++;
+                  mp[val / j]++;
+               }
+            }
+         }
+      }
+      for (auto it : v[i])
+      {
+         ll val_req = getlcm(it, x) / it;
+         // now we have to check how many indices are multiple of val_req
+
+         ll tot = mp[val_req];
+         if (it % val_req == 0)// remove if current index is also a multiple of val_req
+            tot--;
+
+         ans += tot;
+      }
+   }
+   cout << ans / 2 << endl;
+   return;
+}
+int main()
+{
+   speed;
+   ll kk;
+   kk = 1;
+   // cin >> kk;
+   while (kk--)
+   {
+      solve();
+   }
+}

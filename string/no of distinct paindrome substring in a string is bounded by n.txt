@@ -1,0 +1,1 @@
+https://math.stackexchange.com/questions/1926549/number-of-distinct-palindromic-sub-strings-of-a-string
