@@ -1,0 +1,157 @@
+//https://leetcode.com/problems/minimum-number-of-visited-cells-in-a-grid/
+#include <bits/stdc++.h>
+#include <iostream>
+using namespace std;
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+#define speed                    \
+   ios_base::sync_with_stdio(0); \
+   cin.tie(0);                   \
+   cout.tie(0);
+#define ll int
+#define ld long double
+#define pb push_back
+#define mem1(a) memset(a, -1, sizeof(a))
+#define mem0(a) memset(a, 0, sizeof(a))
+#define setp(x) fixed << setprecision(x)
+#define endl "\n"
+#define mod 1000000007
+#define mod1 998244353
+#define ff first
+#define ss second
+#define MAX 10000005
+#define N 200005
+#define K 35
+#define INF 10000000
+#define all(v) v.begin(), v.end()
+#define sbit(a) __builtin_popcount(a)
+template <typename T>
+using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+typedef pair<ll, ll> pll;
+typedef pair<pll, ll> ppl;
+typedef map<ll, ll> mpll;
+typedef map<vector<ll>, ll> mpvl;
+ll power(ll x, ll y, ll p)
+{
+   ll res = 1;
+
+   x = x % p;
+
+   if (x == 0)
+      return 0;
+   while (y > 0)
+   {
+
+      if (y & 1)
+         res = (res * x) % p;
+
+      y = y >> 1;
+      x = (x * x) % p;
+   }
+
+   return res;
+}
+ll powernm(ll x, ll y)
+{
+   ll res = 1;
+
+   if (x == 0)
+      return 0;
+   while (y > 0)
+   {
+
+      if (y & 1)
+         res = (res * x);
+
+      y = y >> 1;
+      x = (x * x);
+   }
+
+   return res;
+}
+void update(ll v, ll tl, ll tr, ll point, vector<ll> &t, ll val)
+{
+   if (tl == tr)
+   {
+      t[v] = val;
+   }
+   else
+   {
+      ll tm = (tl + tr) / 2;
+      if (tm >= point)
+      {
+         update(2 * v, tl, tm, point, t, val);
+      }
+      else
+      {
+         update(2 * v + 1, tm + 1, tr, point, t, val);
+      }
+      t[v] = min(t[2 * v], t[2 * v + 1]);
+   }
+}
+ll getMin(ll v, ll tl, ll tr, ll l, ll r, vector<ll> &t)
+{
+   if (l > r)
+      return 1e9;
+   if (l == tl && r == tr)
+   {
+      return t[v];
+   }
+   else
+   {
+      ll tm = (tl + tr) / 2;
+      return min(getMin(2 * v, tl, tm, l, min(r, tm), t), getMin(2 * v + 1, tm + 1, tr, max(l, tm + 1), r, t));
+   }
+}
+int minimumVisitedCells(vector<vector<int>> &grid)
+{
+
+   int n = grid.size();
+   int m = grid[0].size();
+   vector<vector<int>> dp(n, vector<int>(m, 1e8));
+   vector<vector<int>> tr(n + 1, vector<int>(4 * (m + 1), 1e8));
+   vector<vector<int>> tc(m + 1, vector<int>(4 * (n + 1), 1e8));
+
+   for (int i = n - 1; i >= 0; i--)
+   {
+      for (int j = m - 1; j >= 0; j--)
+      {
+         if (i == n - 1 && j == m - 1)
+         {
+            dp[i][j] = 1;
+         }
+         else
+         {
+            int hr = min(m - 1, j + grid[i][j]);
+            int vc = min(n - 1, i + grid[i][j]);
+            if (hr > j)
+            {
+               dp[i][j] = min(dp[i][j], 1 + getMin(1, 0, m - 1, j + 1, hr, tr[i]));
+            }
+            if (vc > i)
+            {
+               dp[i][j] = min(dp[i][j], 1 + getMin(1, 0, n - 1, i + 1, vc, tc[j]));
+            }
+         }
+         update(1, 0, n - 1, i, tc[j], dp[i][j]);
+         update(1, 0, m - 1, j, tr[i], dp[i][j]);
+      }
+   }
+   return dp[0][0];
+}
+void solve()
+{
+}
+int main()
+{
+   speed;
+   ll kk;
+   kk = 1;
+   // cin >> kk;
+   while (kk--)
+   {
+      solve();
+   }
+}

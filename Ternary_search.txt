@@ -1,0 +1,37 @@
+https://practice.geeksforgeeks.org/problems/optimum-location-of-point-to-minimize-total-distance/1?utm_source=geeksforgeeks&utm_medium=ml_article_practice_tab&utm_campaign=article_practice_tab
+
+double fndED(double x, double y, vector<pair<int, int>> p)
+{
+   double dis = 0;
+   for (auto it : p)
+   {
+      dis += sqrt(pow(it.first - x, 2) + pow(it.second - y, 2));
+   }
+   return dis;
+}
+double findOptimumCost(tuple<int, int, int> l, vector<pair<int, int>> p, int n)
+{
+   int a = get<0>(l);
+   int b = get<1>(l);
+   int c = get<2>(l);
+   double lw = -1e6, hi = 1e6;
+   while (lw <= hi)
+   {
+      double mid1 = (lw + (hi - lw) / 3);
+      double mid2 = (hi - (hi - lw) / 3);
+      double y1 = -(a * mid1 + c) / b;
+      double y2 = -(a * mid2 + c) / b;
+      double d1 = fndED(mid1, y1, p);
+      double d2 = fndED(mid1, y1, p);
+      if (d1 < d2)
+      {
+         hi = mid2;
+      }
+      else
+      {
+         lw = mid1;
+      }
+   }
+   double y = -(a * (hi + lw) / 2 + c) / b;
+   return fndED((hi + lw) / 2, y, p);
+}
