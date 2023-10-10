@@ -1,0 +1,66 @@
+https://practice.geeksforgeeks.org/problems/articulation-point-1/1?utm_source=geeksforgeeks&utm_medium=ml_article_practice_tab&utm_campaign=article_practice_tab
+
+
+#define ll int
+#define pll pair<ll,ll>
+#define N 100005
+#define pb push_back
+class Solution {
+  public:
+ll tin[N];
+ll low[N];
+ll vis[N];
+ll timer = 0;
+set<int>ans;
+void dfs(ll v, ll p, vector<int> adj[])
+{
+   tin[v] = ++timer;
+   low[v] = tin[v];
+   vis[v] = 1;
+   int child=0;
+   for (auto it : adj[v])
+   {
+      if (it == p)
+      {
+         continue;
+      }
+      if (!vis[it])
+      {
+         dfs(it, v, adj);
+         low[v] = min(low[v], low[it]);
+         if (low[it] >=tin[v]&&p!=-1)
+         {
+            ans.insert(v);
+         }
+         child++;
+      }
+      else
+      {
+         low[v] = min(low[v], tin[it]);
+      }
+   }
+   if(p==-1&&child>1)ans.insert(v);
+}
+    vector<int> articulationPoints(int n, vector<int>adj[]) {
+         
+    for(int i=0;i<=n;i++)
+    {
+        timer=0;
+        tin[i]=-1;
+        low[i]=-1;
+        ans.clear();
+        vis[i]=0;
+        
+    }
+    if(n==1)return {-1};
+    for(int i=0;i<n;i++){
+        
+        if(vis[i]==0)
+         dfs(i,-1,adj);
+    }
+    vector<int>vans;
+    for(auto it:ans)vans.pb(it);
+    if(!vans.size())vans.pb(-1);
+    return vans;
+    }
+

@@ -1,0 +1,151 @@
+#include <bits/stdc++.h>
+#include <iostream>
+using namespace std;
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+#define speed                    \
+   ios_base::sync_with_stdio(0); \
+   cin.tie(0);                   \
+   cout.tie(0);
+#define ll long long
+#define ld long double
+#define pb push_back
+#define mem1(a) memset(a, -1, sizeof(a))
+#define mem0(a) memset(a, 0, sizeof(a))
+#define setp(x) fixed << setprecision(x)
+#define endl "\n"
+#define mod 1000000007
+#define mod1 998244353
+#define ff first
+#define ss second
+#define MAX 10000005
+#define N 100005
+#define K 35
+#define BLOCK_SIZE 700
+#define INF 10000000
+#define all(v) v.begin(), v.end()
+#define sbit(a) __builtin_popcount(a)
+template <typename T>
+using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+typedef pair<ll, ll> pll;
+typedef pair<pll, ll> ppl;
+typedef map<ll, ll> mpll;
+typedef map<vector<ll>, ll> mpvl;
+ll power(ll x, ll y, ll p)
+{
+   ll res = 1;
+
+   x = x % p;
+
+   if (x == 0)
+      return 0;
+   while (y > 0)
+   {
+
+      if (y & 1)
+         res = (res * x) % p;
+
+      y = y >> 1;
+      x = (x * x) % p;
+   }
+
+   return res;
+}
+ll powernm(ll x, ll y)
+{
+   ll res = 1;
+
+   if (x == 0)
+      return 0;
+   while (y > 0)
+   {
+
+      if (y & 1)
+         res = (res * x);
+
+      y = y >> 1;
+      x = (x * x);
+   }
+
+   return res;
+}
+struct Query
+{
+
+   ll l, r, idx;
+   bool operator<(Query q2) const
+   {
+      if (l / BLOCK_SIZE == q2.l / BLOCK_SIZE)
+      {
+         return (l / BLOCK_SIZE & 1) ? (r < q2.r) : (r > q2.r);
+      }
+
+      return l / BLOCK_SIZE < q2.l / BLOCK_SIZE;
+   }
+};
+
+// bool compare(Query q1, Query q2)
+// {
+
+//    if (q1.l / BLOCK_SIZE == q2.l / BLOCK_SIZE)
+//       return q1.r < q2.r;
+
+//    return q1.l / BLOCK_SIZE < q2.l / BLOCK_SIZE;
+// };
+vector<int> solveQueries(vector<int> nums, vector<vector<int>> q, int k)
+{
+   vector<Query> v;
+   ll m = q.size();
+   for (ll i = 0; i < m; i++)
+   {
+      Query queries;
+      queries.l = q[i][0];
+      queries.r = q[i][1];
+      queries.idx = i;
+      v.pb(queries);
+   }
+   sort(v.begin(), v.end());
+   ll cur_l = 0, cur_r = -1;
+   for (ll i = 0; i < m; i++)
+   {
+      while (cur_l > v[i].l)
+      {
+         cur_l--;
+         add(cur_l);
+      }
+      while (cur_r < v[i].r)
+      {
+         cur_r++;
+         add(cur_r);
+      }
+      while (cur_l < v[i].l)
+      {
+
+         remove(cur_l);
+         cur_l++;
+      }
+      while (cur_r > v[i].r)
+      {
+         remove(cur_r);
+         cur_r--;
+      }
+      ans[v[i].idx] = get_answer();
+   }
+   return ans;
+}
+void solve()
+{
+}
+int main()
+{
+   speed;
+   ll kk;
+   kk = 1;
+   // cin >> kk;
+   while (kk--)
+   {
+      solve();
+   }
+}

@@ -1,0 +1,23 @@
+//https://cp-algorithms.com/string/prefix-function.html#implementation
+
+//https://cses.fi/problemset/task/1112/
+
+//very good problem based on it that requires dynamic use of kmp
+ll kmp[2005];
+void prefix_function(string s)
+{
+   int n = s.length();
+   for (int i = 1; i < n; i++)
+   {
+      int j = kmp[i - 1];
+      while (j > 0 && s[i] != s[j])
+         j = kmp[j - 1];
+      if (s[i] == s[j])
+         j++;
+      kmp[i] = j;
+   }  
+}
+// very important online algorithm
+This is an online algorithm, i.e. it processes the data as it arrives - for example, you can read the string characters one by one and process them immediately, finding the value of prefix function for each next character. The algorithm still requires storing the string itself and the previously calculated values of prefix function, but if we know beforehand the maximum value  
+$M$  the prefix function can take on the string, we can store only  
+$M+1$  first characters of the string and the same number of values of the prefix function.

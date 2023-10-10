@@ -1,0 +1,95 @@
+https://practice.geeksforgeeks.org/problems/interesting-queries4742/1?utm_source=geeksforgeeks&utm_medium=ml_article_practice_tab&utm_campaign=article_practice_tab
+#define ll int
+#define BLOCK_SIZE 400
+#define pb push_back
+#define mem0(a) memset(a,0,sizeof(a))
+class Solution {
+public:
+struct Query
+{
+
+   ll l, r, idx;
+   bool operator<(Query q2) const
+   {
+      if (l / BLOCK_SIZE == q2.l / BLOCK_SIZE)
+      {
+         return (l / BLOCK_SIZE & 1) ? (r < q2.r) : (r > q2.r);
+      }
+
+      return l / BLOCK_SIZE < q2.l / BLOCK_SIZE;
+   }
+};
+
+// bool compare(Query q1, Query q2)
+// {
+
+//    if (q1.l / BLOCK_SIZE == q2.l / BLOCK_SIZE)
+//       return q1.r < q2.r;
+
+//    return q1.l / BLOCK_SIZE < q2.l / BLOCK_SIZE;
+// };
+int ans = 0;
+ll mp[1005];
+void add(int ele, int k)
+{
+   mp[ele]++;
+   if (mp[ele] == k)
+   {
+      ans++;
+   }
+}
+void remove(int ele, int k)
+{
+   mp[ele]--;
+   if (mp[ele] == k - 1)
+   {
+      ans--;
+   }
+}
+vector<int> solveQueries(vector<int> nums, vector<vector<int>> q, int k)
+{ 
+   ans=0;
+   mem0(mp);
+   vector<Query> v;
+   ll m = q.size();
+   for (ll i = 0; i < m; i++)
+   {
+      Query queries;
+      queries.l = q[i][0];
+      queries.r = q[i][1];
+      queries.l--;
+      queries.r--;
+      queries.idx = i;
+      v.pb(queries);
+   }
+   sort(v.begin(), v.end());
+   ll cur_l = 0, cur_r = -1;
+   vector<int> vans(m);
+   for (ll i = 0; i < m; i++)
+   {
+      while (cur_l > v[i].l)
+      {
+         cur_l--;
+         add(nums[cur_l], k);
+      }
+      while (cur_r < v[i].r)
+      {
+         cur_r++;
+         add(nums[cur_r], k);
+      }
+      while (cur_l < v[i].l)
+      {
+
+         remove(nums[cur_l], k);
+         cur_l++;
+      }
+      while (cur_r > v[i].r)
+      {
+         remove(nums[cur_r],  k);
+         cur_r--;
+      }
+      vans[v[i].idx] = ans;
+   }
+   return vans;
+}
+};
