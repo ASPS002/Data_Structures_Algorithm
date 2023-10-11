@@ -1,0 +1,276 @@
+https://www.hackerearth.com/problem/algorithm/vacation-2-36d1d454/
+#include <bits/stdc++.h>
+#include <iostream>
+using namespace std;
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+#define speed                    \
+   ios_base::sync_with_stdio(0); \
+   cin.tie(0);                   \
+   cout.tie(0);
+#define ll long long
+#define ld long double
+#define pb push_back
+#define mem1(a) memset(a, -1, sizeof(a))
+#define mem0(a) memset(a, 0, sizeof(a))
+#define setp(x) fixed << setprecision(x)
+#define endl "\n"
+#define mod1 1000000007
+#define mod 998244353
+#define ff first
+#define ss second
+#define MAX 10000005
+#define N 300005
+#define K 22
+#define BLOCK_SIZE 400
+#define INF 10000000
+#define all(v) v.begin(), v.end()
+#define sbit(a) __builtin_popcount(a)
+template <typename T>
+using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+typedef pair<ll, ll> pll;
+typedef pair<pll, ll> ppl;
+typedef map<ll, ll> mpll;
+typedef map<vector<ll>, ll> mpvl;
+ll power(ll x, ll y, ll p)
+{
+   ll res = 1;
+
+   x = x % p;
+
+   if (x == 0)
+      return 0;
+   while (y > 0)
+   {
+
+      if (y & 1)
+         res = (res * x) % p;
+
+      y = y >> 1;
+      x = (x * x) % p;
+   }
+
+   return res;
+}
+ll powernm(ll x, ll y)
+{
+   ll res = 1;
+
+   if (x == 0)
+      return 0;
+   while (y > 0)
+   {
+
+      if (y & 1)
+         res = (res * x);
+
+      y = y >> 1;
+      x = (x * x);
+   }
+
+   return res;
+}
+vector<ll> adj[N];
+ll up[N][K];
+ll mn[N][K];
+ll a[N], dis[N];
+ll in[N], out[N];
+ll timer = 0;
+void dfs(ll v, ll p)
+{
+   in[v] = timer++;
+   up[v][0] = p;
+   mn[v][0] = min(a[v], a[p]);
+   for (ll i = 1; i < K; i++)
+   {
+      up[v][i] = up[up[v][i - 1]][i - 1];
+      mn[v][i] = min(mn[v][i - 1], mn[up[v][i - 1]][i - 1]);
+   }
+   for (auto it : adj[v])
+   {
+      if (it != p)
+      {
+         dis[it] = 1 + dis[v];
+         dfs(it, v);
+      }
+   }
+   out[v] = timer++;
+}
+bool islca(ll u, ll v)
+{
+   if (in[u] <= in[v] && out[u] >= out[v])
+      return 1;
+
+   return 0;
+}
+ll getlca(ll u, ll v)
+{
+   if (islca(u, v))
+      return u;
+   if (islca(v, u))
+      return v;
+   for (ll i = K - 1; i >= 0; i--)
+   {
+      if (!islca(up[u][i], v))
+      {
+         u = up[u][i];
+      }
+   }
+   return up[u][0];
+}
+ll getlcaD(ll u, ll d)
+{
+   if (d == 0)
+      return u;
+   ll cnt = 0;
+   for (ll i = K - 1; i >= 0; i--)
+   {
+      if (cnt + (1ll << i) < d)
+      {
+         u = up[u][i];
+         cnt += (1ll << i);
+      }
+   }
+   return up[u][0];
+}
+ll getmn(ll u, ll lca, ll k, ll &f)
+{
+   if (u == lca)
+      return 0;
+   ll ans = 0;
+   for (ll j = K - 1; j >= 0; j--)
+   {
+      if (in[up[u][j]] > in[lca])
+      {
+         if (mn[u][j] >= k)
+         {
+            ans += (1ll << j);
+            u = up[u][j];
+         }
+      }
+   }
+   if (mn[u][0] >= k)
+   {
+      ans++;
+      if (up[u][0] == lca)
+         f = 1;
+   }
+   return ans;
+}
+void solve()
+{
+   ll n;
+   cin >> n;
+   for (ll i = 0; i < n; i++)
+   {
+      cin >> a[i];
+   }
+   for (ll i = 1; i < n; i++)
+   {
+      ll x, y;
+      cin >> x >> y;
+      adj[x].pb(y);
+      adj[y].pb(x);
+   }
+   dfs(0, 0);
+   ll q;
+   cin >> q;
+   for (ll i = 0; i < q; i++)
+   {
+      ll x, y, k;
+      cin >> x >> y >> k;
+      ll lca = getlca(x, y);
+      ll f1 = 0, f2 = 0;
+      if (x == lca || y == lca)
+      {
+         ll tx = x;
+         ll ty = y;
+         if (x == lca)
+         {
+            swap(x, y);
+            swap(ty, tx);
+         }
+         ll ans = getmn(x, lca, k, f1);
+         if (!f1)
+         {
+            ll dif = dis[x] - dis[lca];
+            ll lw = 1, hi = dif;
+            while (lw <= hi)
+            {
+               x = tx;
+               ll mid = (lw + hi) / 2;
+               x = getlcaD(x, mid);
+               if (getmn(x, lca, k, f1) == dis[x] - dis[lca])
+               {
+                  hi = mid - 1;
+               }
+               else
+               {
+                  lw = mid + 1;
+               }
+            }
+            x = getlcaD(tx, lw);
+            ans += max(0ll, dis[x] - dis[lca]);
+         }
+         else
+         {
+            ans--;
+         }
+         cout << ans << endl;
+      }
+      else
+      {
+         ll tx = x, ty = y;
+         ll cnt1 = getmn(y, lca, k, f1);
+         ll cnt2 = getmn(x, lca, k, f2);
+         if (f1 && f2)
+         {
+            cout << cnt1 + cnt2 - 1 << endl;
+         }
+         else if (f1 || f2)
+         {
+            if (f2)
+            {
+               x = y;
+               tx = ty;
+            }
+            x = tx;
+            ll dif = dis[x] - dis[lca];
+            ll lw = 1, hi = dif;
+            while (lw <= hi)
+            {
+               x = tx;
+               ll mid = (lw + hi) / 2;
+               x = getlcaD(x, mid);
+               if (getmn(x, lca, k, f1) == dis[x] - dis[lca])
+               {
+                  hi = mid - 1;
+               }
+               else
+               {
+                  lw = mid + 1;
+               }
+            }
+            x = getlcaD(tx, lw);
+            cout << cnt1 + cnt2 + max(0ll, dis[x] - dis[lca]) << endl;
+         }
+         else
+         {
+            cout << cnt1 + cnt2 << endl;
+         }
+      }
+   }
+}
+int main()
+{
+   speed;
+   ll kk;
+   kk = 1;
+   // cin >> kk;
+   while (kk--)
+   {
+      solve();
+   }
+}
