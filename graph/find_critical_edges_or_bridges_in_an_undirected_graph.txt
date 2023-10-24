@@ -1,0 +1,40 @@
+//https://practice.geeksforgeeks.org/problems/critical-connections/1?utm_source=geeksforgeeks&utm_medium=ml_article_practice_tab&utm_campaign=article_practice_tab
+
+ll tin[N]; // entry time
+ll low[N];// it indicates the first node in terms of tin from which v is reachable except for its direct parent
+ll vis[N];
+ll timer = 0;
+vector<vector<ll>> ans;
+void dfs(ll v, ll p, vector<ll> adj[])
+{
+   tin[v] = ++timer;
+   low[v] = tin[v];
+   vis[v] = 1;
+   for (auto it : adj[v])
+   {
+      if (it == p)
+      {
+         continue;
+      }
+      if (!vis[it])
+      {
+         dfs(it, v, adj);
+         low[v] = min(low[v], low[it]);
+         if (low[it] > tin[v])
+         {
+            ans.pb({min(it, v), max(it, v)});
+         }
+      }
+      else
+      {
+         low[v] = min(low[v], tin[it]);
+      }
+   }
+}
+vector<vector<ll>> criticalConnections(ll n, vector<ll> adj[])
+{
+   timer = 0;
+   dfs(1, -1, adj);
+   sort(ans.begin(),ans.end());
+   return ans;
+}
